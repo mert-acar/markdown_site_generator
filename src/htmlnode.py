@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, Sequence
 
 
 class HTMLNode:
@@ -6,13 +6,19 @@ class HTMLNode:
     self,
     tag: Union[str, None] = None,
     value: Union[str, None] = None,
-    children: Union[list, None] = None,
+    children: Union[Sequence, None] = None,
     props: Union[dict, None] = None
   ) -> None:
     self.tag = tag
     self.value = value
     self.children = children
     self.props = props
+
+  def __eq__(self, other: object) -> bool:
+    return (
+      self.tag == other.tag and self.value == other.value and self.children == other.children and
+      self.props == other.props
+    )
 
   def to_html(self):
     raise NotImplementedError("to_html method not implemented")
@@ -46,7 +52,7 @@ class LeafNode(HTMLNode):
 
 
 class ParentNode(HTMLNode):
-  def __init__(self, tag: str, children: list[HTMLNode], props: Union[dict, None] = None) -> None:
+  def __init__(self, tag: str, children: Sequence[HTMLNode], props: Union[dict, None] = None) -> None:
     super().__init__(tag, None, children, props)
 
   def to_html(self):
